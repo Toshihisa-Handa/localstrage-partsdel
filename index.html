@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <!-- <link rel="stylesheet" href="css/reset.css"> -->
+  <link rel="stylesheet" href="css/style.css">
+<style>
+
+input{
+  display: inline-block;
+}
+
+  ul{
+    display:flex;
+    list-style:none;
+    /* justify-content: space-around; */
+  }
+
+  li{
+  margin-left: 20px;
+  background-color: antiquewhite;
+  }
+  li:active{
+    background-color: brown;
+  }
+
+
+</style>
+</head>
+<body>
+
+  <h1>部分メモパッド</h1>
+
+<main>
+  <input type="text" id='key'>
+  <br>
+  <textarea  id="memo" cols="30" rows="10"></textarea>
+  <ul>
+    <li id="save" >保存</li>
+    <li id="clear">削除</li>
+  </ul>
+</main>
+
+<table id ='list'>
+<!-- ここにリストが表示される -->
+</table>
+
+
+
+
+
+  <script>
+//変数定義
+let text_area,
+    save,
+    clear,
+    list;
+    
+
+ list = document.querySelector('#list');
+
+
+
+//saveの記述
+save = document.querySelector('#save');
+
+
+save.onclick = function(){//keyとmemoで記入内容取得
+ const key = document.querySelector('#key').value;
+ const value = document.querySelector('#memo').value;
+ const table = document.createElement('tr');
+ table.innerHTML= `<th>${key}</th><td>${value}</td><button class='del'>削除</button>`;
+ localStorage.setItem(key, value);
+ 
+ list.appendChild(table);
+
+ 
+};
+
+ //clearの記述
+ clear = document.querySelector('#clear');
+  
+ clear.onclick = function(){
+  localStorage.clear();  
+  list.innerHTML ='';//listタグの中身を空にすることでlist内のタグの記述を消している
+}
+
+//保存の記述
+for(let i =0; i<localStorage.length; i++){
+  const key = localStorage.key(i);
+  const value = localStorage.getItem(key);
+  const table = document.createElement('tr');
+  table.innerHTML= `<th>${key}</th><td>${value}</td><button class='del'>削除</button>`;
+  list.appendChild(table);
+}
+
+// 部分削除
+
+//個別削除のコード
+//?????リロードした際の要素は消せるが、新規追加の要素を消せない？？？
+let del = document.querySelectorAll('.del');
+
+
+del.forEach(function(e){
+  e.addEventListener('click',function(){
+    const oya = e.parentNode;
+    oya.classList.add('kes');
+    if(oya.classList.contains('kes')){
+      oya.remove();
+    }
+    console.log(oya);
+
+
+ //localstrageのデータを消す（追加要素は消せない）
+ const oya2 = this.parentNode.querySelector('th').innerHTML;
+ console.log(oya2);
+ localStorage.removeItem(oya2);
+
+console.log(del);
+
+  });  
+});
+
+
+// 部分削除
+// jequeryの記述ーーーーーーーーーーーーーーーーーーーーーーーー
+//jqueryであれば1つずつ消すことが追加要素もロード要素も可能。生jsだと追加が消せない
+//個別削除のコード⤵︎
+// $(".del").on("click",function(){
+//     //見た目を消す↓
+//     const oya = $(this).parents("tr");
+//     oya.addClass("kesu");
+//     if(oya.hasClass("kesu")){
+//         oya.remove();
+//     }
+
+//     //localstrageのデータを消す↓
+//     const oya2 = $(this).parents("tr").find("th").html();
+//     localStorage.removeItem(oya2);
+// });
+//----------------------------------------------------
+
+
+</script>
+</body>
+</html>
